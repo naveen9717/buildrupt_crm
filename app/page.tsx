@@ -27,7 +27,7 @@ const Login = () => {
   const [err1, setError1] = useState("");
   const [data, setData] = useState({
     email: "weddingqueen@gmail.com",
-    password: "1234567890",
+    password: "weddingqueen123",
   });
   const { email, password } = data;
   const changeHandler = (e: any) => {
@@ -75,45 +75,45 @@ const Login = () => {
   };
   const [loading1, setLoading1] = useState(false);
 
-  const Login1 = async (_e: any) => {
-    _e.preventDefault();
-    setLoading1(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+  // const Login1 = async (_e: any) => {
+  //   _e.preventDefault();
+  //   setLoading1(true);
+  //   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    if (
-      data.email === "weddingqueen@gmail.com" &&
-      data.password === "1234567890"
-    ) {
-      toast.success("Login successful", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
-      setTimeout(() => {
-        RouteChange(); // Navigate after toast delay
-      }, 2000);
-    } else {
-      setError1("The Auction details did not Match");
-      setData({
-        email: "weddingqueen@gmail.com",
-        password: "1234567890",
-      });
-      toast.error("Invalid login credentials", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
+  //   if (
+  //     data.email === "weddingqueen@gmail.com" &&
+  //     data.password === "1234567890"
+  //   ) {
+  //     toast.success("Login successful", {
+  //       position: "top-right",
+  //       autoClose: 1500,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //     });
+  //     setTimeout(() => {
+  //       RouteChange(); // Navigate after toast delay
+  //     }, 2000);
+  //   } else {
+  //     setError1("The Auction details did not Match");
+  //     setData({
+  //       email: "weddingqueen@gmail.com",
+  //       password: "1234567890",
+  //     });
+  //     toast.error("Invalid login credentials", {
+  //       position: "top-right",
+  //       autoClose: 1500,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
 
-        pauseOnHover: true,
-        draggable: true,
-      });
-    }
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //     });
+  //   }
 
-    setLoading1(false);
-  };
+  //   setLoading1(false);
+  // };
 
   const LoginWithMySQL = async (e) => {
     e.preventDefault();
@@ -190,6 +190,7 @@ const Login = () => {
           />
         </div>
         <ParticleCard />
+
         <div className="container">
           <Row className="justify-content-center align-items-center authentication authentication-basic h-100">
             <Col xxl={4} xl={5} lg={6} md={6} sm={8} className="col-12">
@@ -236,11 +237,7 @@ const Login = () => {
                           <Link scroll={false} href="/dashboards/sales">
                             <Image
                               fill
-                              src={`${
-                                process.env.NODE_ENV === "production"
-                                  ? basePath
-                                  : ""
-                              }/assets/images/brand-logos/toggle-logo.png`}
+                              src="https://nextjs.spruko.com/bootstrap/app-router/vyzor-ts/preview/assets/images/brand-logos/toggle-logo.png"
                               alt="logo"
                               className="desktop-dark"
                             />
@@ -349,43 +346,7 @@ const Login = () => {
                             )}
                           </button>
                         </div>
-                        <div className="text-center my-3 authentication-barrier">
-                          <span className="op-4 fs-13">OR</span>
-                        </div>
-                        <div className="d-grid mb-3">
-                          <SpkButton Customclass="btn btn-white btn-w-lg border d-flex align-items-center justify-content-center flex-fill mb-3">
-                            <span className="avatar avatar-xs">
-                              <Image
-                                fill
-                                src={`${
-                                  process.env.NODE_ENV === "production"
-                                    ? basePath
-                                    : ""
-                                }/assets/images/media/apps/google.png`}
-                                alt=""
-                              />
-                            </span>
-                            <span className="lh-1 ms-2 fs-13 text-default fw-medium">
-                              Signup with Google
-                            </span>
-                          </SpkButton>
-                          <SpkButton Customclass="btn btn-white btn-w-lg border d-flex align-items-center justify-content-center flex-fill">
-                            <span className="avatar avatar-xs">
-                              <Image
-                                fill
-                                src={`${
-                                  process.env.NODE_ENV === "production"
-                                    ? basePath
-                                    : ""
-                                }/assets/images/media/apps/facebook.png`}
-                                alt=""
-                              />
-                            </span>
-                            <span className="lh-1 ms-2 fs-13 text-default fw-medium">
-                              Signup with Facebook
-                            </span>
-                          </SpkButton>
-                        </div>
+
                         <div className="text-center mt-3 fw-medium">
                           Dont have an account?{" "}
                           <Link
