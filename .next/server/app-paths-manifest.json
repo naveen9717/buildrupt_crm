@@ -1,0 +1,12 @@
+{
+  "/api/login/route": "app/api/login/route.js",
+  "/api/login/team-member/route": "app/api/login/team-member/route.js",
+  "/api/calendars/route": "app/api/calendars/route.js",
+  "/api/finance/route": "app/api/finance/route.js",
+  "/(components)/(content-layout)/team-members/page": "app/(components)/(content-layout)/team-members/page.js",
+  "/(components)/(content-layout)/calendars/page": "app/(components)/(content-layout)/calendars/page.js",
+  "/(components)/(content-layout)/pages/timeline/page": "app/(components)/(content-layout)/pages/timeline/page.js",
+  "/(components)/(content-layout)/login/profile-settings/page": "app/(components)/(content-layout)/login/profile-settings/page.js",
+  "/(components)/(content-layout)/dashboards/sales/page": "app/(components)/(content-layout)/dashboards/sales/page.js",
+  "/(components)/(content-layout)/finance/page": "app/(components)/(content-layout)/finance/page.js"
+}
