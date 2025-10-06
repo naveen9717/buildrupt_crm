@@ -3,28 +3,12 @@ import { db } from "@/config/db.js";
 
 export async function GET() {
   try {
-    const [
-      [vendors],
-      [expenses],
-      [invoices], // already just rows
-      [paymentPaid],
-      [paymentUpcoming],
-      [projects],
-    ] = await Promise.all([
-      db.query("SELECT * FROM photo"),
-      db.query("SELECT * FROM expenses"),
-      db.query(`
-        SELECT
-          invoices.*,
-          projects.name   AS project_name,
-          projects.phone  AS project_phone,
-          projects.email  AS project_email,
-          projects.cost   AS project_cost,
-          projects.client AS project_client
-        FROM invoices
-        JOIN projects ON invoices.project_id = projects.id
-      `),
-      db.query(`SELECT 
+    const [[vendors], [expenses], [paymentPaid], [projects]] =
+      await Promise.all([
+        db.query("SELECT * FROM photo"),
+        db.query("SELECT * FROM expenses"),
+
+        db.query(`SELECT 
       amounts.*, 
       projects.name   AS project_name, 
       projects.client AS project_client, 
@@ -34,18 +18,15 @@ export async function GET() {
    FROM amounts
    JOIN projects ON amounts.project_id = projects.id
    `),
-      db.query("SELECT * FROM amounts WHERE status = 'upcoming'"),
-      db.query("SELECT * FROM projects"),
-    ]);
+        db.query("SELECT * FROM projects"),
+      ]);
 
     // Always return arrays (even if empty) so the frontend can map safely.
     return NextResponse.json({
-      photo: vendors,
-      expense: expenses,
-      invoice: invoices,
+      photo: vendors ?? [],
+      expense: expenses ?? [],
       paymentpaid: paymentPaid ?? [],
-      paymentupcoming: paymentUpcoming,
-      projects: projects,
+      projects: projects ?? [],
     });
   } catch (error) {
     console.error("GET API Error:", error);

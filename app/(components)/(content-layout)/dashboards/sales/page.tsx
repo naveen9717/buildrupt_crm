@@ -32,9 +32,7 @@ const Sales: React.FC<SalesProps> = () => {
   const [data, setData] = useState({
     photo: [],
     expense: [],
-    invoice: [],
     paymentpaid: [],
-    paymentupcoming: [],
     projects: [],
   });
   const [loading, setLoading] = useState(true);
@@ -395,7 +393,7 @@ const Sales: React.FC<SalesProps> = () => {
                         </span>
                       </div>
                       <div className="text-end">
-                        <span className="d-block fw-semibold">{tx.amount}</span>
+                        <span className="d-block fw-semibold">{`₹ ${tx.amount}`}</span>
                         <span
                           className={`fw-medium fs-13 text-capitalize ${
                             tx.status === "paid"
@@ -461,7 +459,17 @@ const Sales: React.FC<SalesProps> = () => {
                       <div className="text-end">
                         <span className="fw-medium">{vendor.full}</span>
                         <span className="d-block fs-12 mt-1 text-muted">
-                          {vendor.status}
+                          <span
+                            className={`fw-medium fs-13 text-capitalize ${
+                              vendor.status === "active"
+                                ? "text-success"
+                                : vendor.status === "unactive"
+                                ? "text-warning"
+                                : "text-danger"
+                            }`}
+                          >
+                            {vendor.status}
+                          </span>
                         </span>
                       </div>
                     </div>
@@ -524,12 +532,17 @@ const Sales: React.FC<SalesProps> = () => {
                         </td>
                         <td>{payment.due_date || payment.paid_date}</td>
                         <td>
-                          <SpkBadge
-                            variant=""
-                            Customclass={`bg-${payment.badgeColor}-transparent rounded-pill min-w-badge`}
+                          <span
+                            className={`fw-medium fs-13 text-capitalize ${
+                              payment.status === "paid"
+                                ? "text-success"
+                                : payment.status === "upcoming"
+                                ? "text-warning"
+                                : "text-danger"
+                            }`}
                           >
                             {payment.status}
-                          </SpkBadge>
+                          </span>
                         </td>
                       </tr>
                     ))}
@@ -596,7 +609,7 @@ const Sales: React.FC<SalesProps> = () => {
                 >
                   {(data?.projects ?? []).slice(0, 5).map((project, index) => (
                     <tr key={index}>
-                      <td>{`#SPT-${index}`}</td>
+                      <td>{`#SPT-00-${index}`}</td>
                       <td>
                         <div className="d-flex align-items-center">
                           <div className="lh-1">

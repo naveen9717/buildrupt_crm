@@ -1,5 +1,6 @@
 {
-  "/api/projects/count/route": "app/api/projects/count/route.js",
   "/api/dashboard/route": "app/api/dashboard/route.js",
+  "/api/login/route": "app/api/login/route.js",
+  "/api/projects/count/route": "app/api/projects/count/route.js",
   "/(components)/(content-layout)/dashboards/sales/page": "app/(components)/(content-layout)/dashboards/sales/page.js"
 }

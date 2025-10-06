@@ -21,11 +21,6 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(components)/(content-layout)/dashboards/sales/page.js"
     ],
-    "/api/login/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/login/route.js"
-    ],
     "/api/dashboard/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -35,6 +30,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/api/projects/count/route.js"
+    ],
+    "/api/login/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/login/route.js"
     ]
   }
 }
