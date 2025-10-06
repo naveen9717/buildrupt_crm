@@ -10,6 +10,36 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/page.js"
+    ],
+    "/api/login/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/login/route.js"
+    ],
+    "/(components)/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(components)/layout.js"
+    ],
+    "/(components)/(content-layout)/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(components)/(content-layout)/layout.js"
+    ],
+    "/(components)/(content-layout)/dashboards/sales/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(components)/(content-layout)/dashboards/sales/page.js"
+    ],
+    "/api/projects/count/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/projects/count/route.js"
+    ],
+    "/api/dashboard/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/dashboard/route.js"
     ]
   }
 }

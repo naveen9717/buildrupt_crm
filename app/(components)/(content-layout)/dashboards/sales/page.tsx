@@ -72,6 +72,25 @@ const Sales: React.FC<SalesProps> = () => {
     }
   }
 
+  function getVendorColor(name: string): string {
+    switch (name) {
+      case "A":
+        return "primary";
+      case "B":
+        return "secondary";
+      case "C":
+        return "warning";
+      case "D":
+        return "info";
+      case "G":
+        return "danger";
+      case "K":
+        return "orange";
+      default:
+        return "success";
+    }
+  }
+
   const fetchItems = async () => {
     fetch(`${process.env.NEXT_PUBLIC_URL}/api/dashboard`)
       .then((res) => res.json())
@@ -207,6 +226,61 @@ const Sales: React.FC<SalesProps> = () => {
       cardClass: "dashboard-main-card border-0 shadow-none mb-0 rounded-0",
     },
   ];
+  const Transactions = [
+    {
+      name: data.paymentpaid[0]?.project_client,
+      avatarColor: "primary",
+      dateTime:
+        data?.paymentpaid[0]?.due_date || data?.paymentpaid[0]?.paid_date,
+      amount: `₹ ${data?.paymentpaid[0]?.amount}`,
+      status: data?.paymentpaid[0]?.status,
+    },
+    {
+      name: data?.paymentpaid[1]?.project_client,
+      avatarColor: "secondary",
+      dateTime:
+        data?.paymentpaid[1]?.due_date || data?.paymentpaid[1]?.paid_date,
+      amount: `₹ ${data?.paymentpaid[1]?.amount}`,
+      status: data?.paymentpaid[1]?.status,
+    },
+    {
+      name: data?.paymentpaid[2]?.project_client,
+      avatarColor: "warning",
+      dateTime:
+        data?.paymentpaid[2]?.due_date || data?.paymentpaid[2]?.paid_date,
+      amount: `₹ ${data?.paymentpaid[2]?.amount}`,
+      status: data?.paymentpaid[2]?.status,
+    },
+    {
+      name: data?.paymentpaid[3]?.project_client,
+      avatarColor: "info",
+      dateTime:
+        data?.paymentpaid[3]?.due_date || data?.paymentpaid[3]?.paid_date,
+      amount: `₹ ${data?.paymentpaid[3]?.amount}`,
+      status: data?.paymentpaid[3]?.status,
+    },
+    // {
+    //   name: "Alex Johnson",
+    //   avatarColor: "danger",
+    //   dateTime: "Feb 12,2025 - 11:55 AM",
+    //   amount: "$2,300.00",
+    //   status: "Completed",
+    // },
+    // {
+    //   name: "Lisa Grant",
+    //   avatarColor: "success",
+    //   dateTime: "Feb 13,2025 - 4:10 PM",
+    //   amount: "$500.00",
+    //   status: "Failed",
+    // },
+    // {
+    //   name: "Jessica Lee",
+    //   avatarColor: "orange",
+    //   dateTime: "Feb 11,2025 - 5:30 PM",
+    //   amount: "$1,100.00",
+    //   status: "Pending",
+    // },
+  ];
   useEffect(() => {
     fetchItems();
     fetchCounts();
@@ -234,7 +308,7 @@ const Sales: React.FC<SalesProps> = () => {
       {/* <!-- Start:: row-1 --> */}
 
       <Row>
-        <Col xxl={6} xl={6} className="">
+        <Col xxl={4} xl={6} className="">
           <Row>
             <Col xl={12}>
               <Card className="custom-card overflow-hidden">
@@ -282,7 +356,7 @@ const Sales: React.FC<SalesProps> = () => {
             </Col>
           </Row>
         </Col>
-        <Col xxl={6} xl={6}>
+        <Col xxl={5} xl={6}>
           <Card className="custom-card">
             <Card.Body>
               <h6 className="fw-semibold mb-3">Expenses Status</h6>
@@ -347,6 +421,48 @@ const Sales: React.FC<SalesProps> = () => {
             </Card.Body>
           </Card>
         </Col>
+        <Col xxl={3}>
+          <Card className="custom-card overflow-hidden">
+            <Card.Header>
+              <div className="card-title">Recent Transactions</div>
+            </Card.Header>
+            <Card.Body>
+              <ul className="list-unstyled projects-recent-transactions-list">
+                {Transactions.map((tx, idx) => (
+                  <li key={idx}>
+                    <div className="d-flex align-items-center gap-2">
+                      <div className="lh-1">
+                        <span
+                          className={`avatar avatar-md avatar-rounded bg-${tx.avatarColor}-transparent`}
+                        >
+                          {tx.name?.charAt(0)}
+                        </span>
+                      </div>
+                      <div className="flex-fill">
+                        <span className="d-block fw-semibold">{tx.name}</span>
+                        <span className="fs-13 text-muted">{tx.dateTime}</span>
+                      </div>
+                      <div className="text-end">
+                        <span className="d-block fw-semibold">{tx.amount}</span>
+                        <span
+                          className={`fw-medium fs-13 ${
+                            tx.status === "paid"
+                              ? "text-success"
+                              : tx.status === "upcoming"
+                              ? "text-warning"
+                              : "text-danger"
+                          }`}
+                        >
+                          {tx.status}
+                        </span>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </Card.Body>
+          </Card>
+        </Col>
       </Row>
 
       {/* <!-- End:: row-1 --> */}
@@ -368,13 +484,12 @@ const Sales: React.FC<SalesProps> = () => {
                   <li key={index}>
                     <div className="d-flex align-items-center gap-2 flex-wrap">
                       <div className="lh-1">
-                        <span className="avatar avatar-md avatar-rounded">
-                          <Image
-                            width={40}
-                            height={40}
-                            src="https://nextjs.spruko.com/bootstrap/app-router/vyzor-ts/preview/assets/images/faces/12.jpg"
-                            alt={vendor.name}
-                          />
+                        <span
+                          className={`avatar avatar-md avatar-rounded bg-${getVendorColor(
+                            vendor.name?.charAt(0)
+                          )}-transparent`}
+                        >
+                          {vendor.name?.charAt(0)}
                         </span>
                       </div>
                       <div className="flex-fill">
@@ -436,14 +551,15 @@ const Sales: React.FC<SalesProps> = () => {
                       <tr key={index}>
                         <td>
                           <div className="d-flex align-items-center gap-2">
-                            <span className="avatar avatar-md bg-light p-1 avatar-rounded">
-                              <Image
-                                width={40}
-                                height={40}
-                                src="https://nextjs.spruko.com/bootstrap/app-router/vyzor-ts/preview/assets/images/faces/11.jpg"
-                                alt={payment.project_name}
-                              />
-                            </span>
+                            <div className="lh-1">
+                              <span
+                                className={`avatar avatar-md avatar-rounded bg-${getVendorColor(
+                                  payment.project_name?.charAt(0)
+                                )}-transparent`}
+                              >
+                                {payment.project_name?.charAt(0)}
+                              </span>
+                            </div>
                             <div>
                               <p className="fw-medium mb-0">
                                 {payment.project_name}
@@ -531,14 +647,15 @@ const Sales: React.FC<SalesProps> = () => {
                       <td>{`#SPT-${index}`}</td>
                       <td>
                         <div className="d-flex align-items-center">
-                          <span className="avatar avatar-sm me-2 avatar-rounded">
-                            <Image
-                              width={28}
-                              height={28}
-                              src="https://nextjs.spruko.com/bootstrap/app-router/vyzor-ts/preview/assets/images/faces/15.jpg"
-                              alt="img"
-                            />
-                          </span>
+                          <div className="lh-1">
+                            <span
+                              className={`avatar avatar-md avatar-rounded bg-${getVendorColor(
+                                project.name?.charAt(0)
+                              )}-transparent`}
+                            >
+                              {project.name?.charAt(0)}
+                            </span>
+                          </div>
                           {project.name}
                         </div>
                       </td>
