@@ -226,61 +226,7 @@ const Sales: React.FC<SalesProps> = () => {
       cardClass: "dashboard-main-card border-0 shadow-none mb-0 rounded-0",
     },
   ];
-  const Transactions = [
-    {
-      name: data.paymentpaid[0]?.project_client,
-      avatarColor: "primary",
-      dateTime:
-        data?.paymentpaid[0]?.due_date || data?.paymentpaid[0]?.paid_date,
-      amount: `₹ ${data?.paymentpaid[0]?.amount}`,
-      status: data?.paymentpaid[0]?.status,
-    },
-    {
-      name: data?.paymentpaid[1]?.project_client,
-      avatarColor: "secondary",
-      dateTime:
-        data?.paymentpaid[1]?.due_date || data?.paymentpaid[1]?.paid_date,
-      amount: `₹ ${data?.paymentpaid[1]?.amount}`,
-      status: data?.paymentpaid[1]?.status,
-    },
-    {
-      name: data?.paymentpaid[2]?.project_client,
-      avatarColor: "warning",
-      dateTime:
-        data?.paymentpaid[2]?.due_date || data?.paymentpaid[2]?.paid_date,
-      amount: `₹ ${data?.paymentpaid[2]?.amount}`,
-      status: data?.paymentpaid[2]?.status,
-    },
-    {
-      name: data?.paymentpaid[3]?.project_client,
-      avatarColor: "info",
-      dateTime:
-        data?.paymentpaid[3]?.due_date || data?.paymentpaid[3]?.paid_date,
-      amount: `₹ ${data?.paymentpaid[3]?.amount}`,
-      status: data?.paymentpaid[3]?.status,
-    },
-    // {
-    //   name: "Alex Johnson",
-    //   avatarColor: "danger",
-    //   dateTime: "Feb 12,2025 - 11:55 AM",
-    //   amount: "$2,300.00",
-    //   status: "Completed",
-    // },
-    // {
-    //   name: "Lisa Grant",
-    //   avatarColor: "success",
-    //   dateTime: "Feb 13,2025 - 4:10 PM",
-    //   amount: "$500.00",
-    //   status: "Failed",
-    // },
-    // {
-    //   name: "Jessica Lee",
-    //   avatarColor: "orange",
-    //   dateTime: "Feb 11,2025 - 5:30 PM",
-    //   amount: "$1,100.00",
-    //   status: "Pending",
-    // },
-  ];
+
   useEffect(() => {
     fetchItems();
     fetchCounts();
@@ -428,24 +374,30 @@ const Sales: React.FC<SalesProps> = () => {
             </Card.Header>
             <Card.Body>
               <ul className="list-unstyled projects-recent-transactions-list">
-                {Transactions.map((tx, idx) => (
+                {(data?.paymentpaid ?? []).slice(0, 4).map((tx, idx) => (
                   <li key={idx}>
                     <div className="d-flex align-items-center gap-2">
                       <div className="lh-1">
                         <span
-                          className={`avatar avatar-md avatar-rounded bg-${tx.avatarColor}-transparent`}
+                          className={`avatar avatar-md avatar-rounded bg-${getVendorColor(
+                            tx.project_client?.charAt(0)
+                          )}-transparent`}
                         >
-                          {tx.name?.charAt(0)}
+                          {tx.project_client?.charAt(0)}
                         </span>
                       </div>
                       <div className="flex-fill">
-                        <span className="d-block fw-semibold">{tx.name}</span>
-                        <span className="fs-13 text-muted">{tx.dateTime}</span>
+                        <span className="d-block fw-semibold">
+                          {tx.project_client}
+                        </span>
+                        <span className="fs-13 text-muted">
+                          {tx.due_date || tx.paid_date}
+                        </span>
                       </div>
                       <div className="text-end">
                         <span className="d-block fw-semibold">{tx.amount}</span>
                         <span
-                          className={`fw-medium fs-13 ${
+                          className={`fw-medium fs-13 text-capitalize ${
                             tx.status === "paid"
                               ? "text-success"
                               : tx.status === "upcoming"
