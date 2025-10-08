@@ -48,7 +48,7 @@ const ProjectsTables: React.FC<DataTablesProps> = () => {
       .then((data) => setItems(data.data));
   };
 
-  async function fetchCounts() {
+  const fetchCounts = async () => {
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_URL}/api/projects/count`
@@ -64,7 +64,7 @@ const ProjectsTables: React.FC<DataTablesProps> = () => {
       console.error("Fetch error:", error);
     } finally {
     }
-  }
+  };
 
   useEffect(() => {
     fetchItems();

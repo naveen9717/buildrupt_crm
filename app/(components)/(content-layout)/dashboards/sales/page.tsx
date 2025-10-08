@@ -357,7 +357,7 @@ const Sales: React.FC<SalesProps> = () => {
                       >
                         {expenses.event} :
                       </div>
-                      <div className="fw-semibold">{expenses.amount}</div>
+                      <div className="fw-semibold">{`₹ ${expenses.amount}`}</div>
                     </div>
                   </Col>
                 ))}
@@ -423,7 +423,7 @@ const Sales: React.FC<SalesProps> = () => {
         <Col xxl={6}>
           <Card className="custom-card">
             <Card.Header className="justify-content-between">
-              <div className="card-title">Vendors List</div>
+              <div className="card-title">Vendors's List</div>
               <Link scroll={false} href="#!" className="text-muted fs-13">
                 View All<i className="ti ti-arrow-narrow-right ms-1"></i>
               </Link>
@@ -449,7 +449,7 @@ const Sales: React.FC<SalesProps> = () => {
                             variant=""
                             Customclass={`bg-${vendor.status}-transparent ms-2`}
                           >
-                            {vendor.half}
+                            {`₹ ${vendor.half}`}
                           </SpkBadge>
                         </span>
                         <span className="text-muted fs-13">
@@ -457,7 +457,7 @@ const Sales: React.FC<SalesProps> = () => {
                         </span>
                       </div>
                       <div className="text-end">
-                        <span className="fw-medium">{vendor.full}</span>
+                        <span className="fw-medium">{`₹ ${vendor.full}`}</span>
                         <span className="d-block fs-12 mt-1 text-muted">
                           <span
                             className={`fw-medium fs-13 text-capitalize ${
@@ -603,7 +603,7 @@ const Sales: React.FC<SalesProps> = () => {
                     { title: "Relation" },
                     { title: "Email" },
                     { title: "Mobile" },
-                    { title: "Status" },
+                    { title: "Cost" },
                     { title: "Action" },
                   ]}
                 >
@@ -621,7 +621,7 @@ const Sales: React.FC<SalesProps> = () => {
                               {project.name?.charAt(0)}
                             </span>
                           </div>
-                          {project.name}
+                          &nbsp;{project.name}
                         </div>
                       </td>
                       <td>{project.client}</td>
@@ -643,7 +643,7 @@ const Sales: React.FC<SalesProps> = () => {
                               : "danger"
                           }-transparent`}
                         >
-                          {project.cost}
+                          {`₹ ${project.cost}`}
                         </SpkBadge>
                       </td>
                       <td>

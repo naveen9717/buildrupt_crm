@@ -26,15 +26,25 @@
       "static/chunks/main-app.js",
       "static/chunks/app/api/dashboard/route.js"
     ],
+    "/api/login/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/login/route.js"
+    ],
     "/api/projects/count/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/api/projects/count/route.js"
     ],
-    "/api/login/route": [
+    "/(components)/(content-layout)/finance/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/login/route.js"
+      "static/chunks/app/(components)/(content-layout)/finance/page.js"
+    ],
+    "/api/finance/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/finance/route.js"
     ]
   }
 }

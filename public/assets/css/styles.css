@@ -22713,7 +22713,7 @@ html[dir="rtl"] .carousel-item-prev:not(.carousel-item-end) {
   font-size: 0.875rem;
 }
 .card.custom-card .card-body {
-  padding: 1.25rem;
+  padding: 1rem;
   color: var(--default-text-color);
 }
 .card.custom-card .card-link {
