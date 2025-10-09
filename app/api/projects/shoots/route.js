@@ -17,34 +17,11 @@ export async function GET() {
 }
 
 // POST: Add a new item
-// export async function POST(req) {
-//   try {
-//     const body = await req.json();
-//     const { name,type,duration, venue, city,reporting,slot,date,status,notes,photo_crew,photo_role,video_crew,video_role,additional_crew,additional_role} = body;
-
-//     if (!name || !duration) {
-//       return NextResponse.json({ error: 'Name and duration are required' }, { status: 400 });
-//     }
-
-//     const [result] = await db.execute(
-//       'INSERT INTO shoots (name,type,duration, venue, city,reporting,slot,date,status,notes,photo_crew,photo_role,video_crew,video_role,additional_crew,additional_role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-//       [name,type,duration, venue, city,reporting,slot,date,status,notes,photo_crew,photo_role,video_crew,video_role,additional_crew,additional_role]
-//     );
-
-//     return NextResponse.json({
-//       message: 'Item created successfully',
-//       id: result.insertId,
-//     });
-//   } catch (error) {
-//     console.error('POST Error:', error);
-//     return NextResponse.json({ error: 'Failed to create item' }, { status: 500 });
-//   }
-// }
 
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { form1, form2, form3, form4 } = body;
+    const { form1, form2, form3, form4, member_id } = body;
 
     // Example usage
     // Split the 'id-name' format
@@ -92,6 +69,15 @@ export async function POST(req) {
         [project_id, ShootId, item.additional_crew, item.additional_role]
       );
     }
+
+    // ✅ Insert notification
+    const note = `Shoots "${project_label}" was officially created, marking the beginning of event preparation.`;
+    const currentDate = new Date();
+
+    await db.query(
+      "INSERT INTO notifications (member_id, project_id, date, notes) VALUES (?, ?, ?, ?)",
+      [member_id, project_id, currentDate, note]
+    );
 
     return NextResponse.json({ message: "All forms submitted successfully" });
   } catch (error) {

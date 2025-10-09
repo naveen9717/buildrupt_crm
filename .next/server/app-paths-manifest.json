@@ -1,8 +1,10 @@
 {
+  "/api/notification/[memberId]/route": "app/api/notification/[memberId]/route.js",
   "/api/login/route": "app/api/login/route.js",
-  "/api/projects/count/route": "app/api/projects/count/route.js",
-  "/api/dashboard/route": "app/api/dashboard/route.js",
-  "/api/finance/route": "app/api/finance/route.js",
-  "/(components)/(content-layout)/dashboards/sales/page": "app/(components)/(content-layout)/dashboards/sales/page.js",
-  "/(components)/(content-layout)/finance/page": "app/(components)/(content-layout)/finance/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/(components)/(content-layout)/projects/shoots/create-shoot/page": "app/(components)/(content-layout)/projects/shoots/create-shoot/page.js",
+  "/(components)/(content-layout)/projects/create-project/page": "app/(components)/(content-layout)/projects/create-project/page.js",
+  "/(components)/(content-layout)/projects/deliverables/create-deliverable/page": "app/(components)/(content-layout)/projects/deliverables/create-deliverable/page.js",
+  "/(components)/(content-layout)/notification/page": "app/(components)/(content-layout)/notification/page.js",
+  "/(components)/(content-layout)/projects/project/[projectId]/page": "app/(components)/(content-layout)/projects/project/[projectId]/page.js"
 }

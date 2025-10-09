@@ -386,7 +386,7 @@ export const MENUITEMS: any = [
     menutitle: "GENERAL",
   },
   {
-    path: "/pages/timeline",
+    path: "/notification",
     icon: Svgicons.Timelineicon,
     title: "Notifications",
     type: "link",

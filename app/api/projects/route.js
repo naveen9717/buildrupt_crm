@@ -17,48 +17,11 @@ export async function GET() {
 }
 
 // POST: Add a new item
-// export async function POST(req) {
-//   try {
-//     const body = await req.json();
-//     const { form1Data, form2Data, form3Data } = body;
 
-//     // You can use transactions if needed to ensure atomicity.
-
-//     // Insert into table1
-//     await db.query(
-//       "INSERT INTO projects (name,cost,client, relation, phone, email) VALUES (?, ?, ?, ?, ?, ?)",
-//       [
-//         form1Data.name,
-//         form1Data.cost,
-//         form1Data.client,
-//         form1Data.relation,
-//         form1Data.phone,
-//         form1Data.email,
-//       ]
-//     );
-
-//     // Insert into table2
-//     await db.query(
-//       "INSERT INTO shoots (name,date,slot, city) VALUES (?, ?, ?, ?)",
-//       [form2Data.name, form2Data.date, form2Data.slot, form2Data.city]
-//     );
-
-//     // Insert into table3
-//     await db.query(
-//       "INSERT INTO deliverables (name,cost,quantity, date) VALUES (?, ?, ?, ?)",
-//       [form3Data.name, form3Data.cost, form3Data.quantity, form3Data.date]
-//     );
-
-//     return NextResponse.json({ message: "All forms submitted successfully" });
-//   } catch (error) {
-//     console.error("Insert error:", error);
-//     return NextResponse.json({ error: "Insertion failed" }, { status: 500 });
-//   }
-// }
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { form1, form2, form3, form4 } = body;
+    const { form1, form2, form3, form4, member_id } = body;
 
     // Insert into projects
     const [projectResult] = await db.query(
@@ -75,7 +38,7 @@ export async function POST(req) {
     const projectId = projectResult.insertId; // ✅ Get last inserted ID
     // Insert into projects
     await db.query(
-      "INSERT INTO amounts (project_id,amount,description,date) VALUES (?, ?, ?, ?)",
+      "INSERT INTO amounts (project_id,amount,description,paid_date) VALUES (?, ?, ?, ?)",
       [projectId, form4.amount, form4.description, form4.date]
     );
 
@@ -95,60 +58,18 @@ export async function POST(req) {
       );
     }
 
+    // ✅ Insert notification
+    const note = `Project "${form1.name}" was officially created, marking the beginning of event preparation.`;
+    const currentDate = new Date();
+
+    await db.query(
+      "INSERT INTO notifications (member_id, project_id, date, notes) VALUES (?, ?, ?, ?)",
+      [member_id, projectId, currentDate, note]
+    );
+
     return NextResponse.json({ message: "All forms submitted successfully" });
   } catch (error) {
     console.error("Insert error:", error);
     return NextResponse.json({ error: "Insertion failed" }, { status: 500 });
-  }
-}
-
-// PUT: Update an existing item
-export async function PUT(req) {
-  try {
-    const body = await req.json();
-    const { id, name, price } = body;
-
-    if (!id || !name || !price) {
-      return NextResponse.json(
-        { error: "ID, name, and price are required" },
-        { status: 400 }
-      );
-    }
-
-    await db.execute("UPDATE projects SET name = ?, price = ? WHERE id = ?", [
-      name,
-      price,
-      id,
-    ]);
-
-    return NextResponse.json({ message: "Item updated successfully" });
-  } catch (error) {
-    console.error("PUT Error:", error);
-    return NextResponse.json(
-      { error: "Failed to update item" },
-      { status: 500 }
-    );
-  }
-}
-
-// DELETE: Delete an item
-export async function DELETE(req) {
-  try {
-    const body = await req.json();
-    const { id } = body;
-
-    if (!id) {
-      return NextResponse.json({ error: "ID is required" }, { status: 400 });
-    }
-
-    await db.execute("DELETE FROM projects WHERE id = ?", [id]);
-
-    return NextResponse.json({ message: "Item deleted successfully" });
-  } catch (error) {
-    console.error("DELETE Error:", error);
-    return NextResponse.json(
-      { error: "Failed to delete item" },
-      { status: 500 }
-    );
   }
 }

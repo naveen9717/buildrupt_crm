@@ -1,18 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/config/db.js";
 
-// export async function GET(request, { params }) {
-//   const { shootId } = await params;
-//   try {
-//     const result = await db.query("SELECT * FROM shoots WHERE id = ?", [
-//       shootId,
-//     ]);
-//     return NextResponse.json(result[0]);
-//   } catch (error) {
-//     return NextResponse.json({ message: error.message });
-//   }
-// }
-
 export async function GET(request, { params }) {
   const { shootId } = await params;
 

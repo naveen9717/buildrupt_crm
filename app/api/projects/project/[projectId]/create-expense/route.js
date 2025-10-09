@@ -21,7 +21,7 @@ export async function GET() {
 export async function POST(req, { params }) {
   try {
     const body = await req.json();
-    const { form } = body;
+    const { form, member_id } = body;
 
     const { projectId } = await params;
 
@@ -43,7 +43,14 @@ export async function POST(req, { params }) {
       ]
     );
     // Insert into projects
+    // ✅ Insert notification
+    const note = `Expenses was officially created, marking the beginning of event preparation.`;
+    const currentDate = new Date();
 
+    await db.query(
+      "INSERT INTO notifications (member_id, project_id, date, notes) VALUES (?, ?, ?, ?)",
+      [member_id, projectId, currentDate, note]
+    );
     return NextResponse.json({ message: "All forms submitted successfully" });
   } catch (error) {
     console.error("Insert error:", error);

@@ -66,9 +66,12 @@ const EditTask: React.FC<CreateProjectProps> = () => {
   // Final submit handler
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    const savedLoginData = localStorage.getItem("LoginData");
+    const loginData = savedLoginData ? JSON.parse(savedLoginData) : null;
+    const member_id = loginData?.id ?? null;
     const payload = {
       form,
+      member_id,
     };
 
     try {

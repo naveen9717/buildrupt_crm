@@ -20,7 +20,7 @@ export async function GET() {
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { form } = body;
+    const { form, member_id } = body;
 
     // Example usage
     // Split the 'id-name' format
@@ -43,6 +43,14 @@ export async function POST(req) {
     );
     // Insert into projects
 
+    // ✅ Insert notification
+    const note = `Deliverables "${project_label}" was officially created, marking the beginning of event preparation.`;
+    const currentDate = new Date();
+
+    await db.query(
+      "INSERT INTO notifications (member_id, project_id, date, notes) VALUES (?, ?, ?, ?)",
+      [member_id, projectId, currentDate, note]
+    );
     return NextResponse.json({ message: "All forms submitted successfully" });
   } catch (error) {
     console.error("Insert error:", error);
@@ -51,32 +59,6 @@ export async function POST(req) {
 }
 
 // PUT: Update an existing item
-export async function PUT(req) {
-  try {
-    const body = await req.json();
-    const { id, name, price } = body;
-
-    if (!id || !name || !price) {
-      return NextResponse.json(
-        { error: "ID, name, and price are required" },
-        { status: 400 }
-      );
-    }
-
-    await db.execute(
-      "UPDATE deliverables SET name = ?, price = ? WHERE id = ?",
-      [name, price, id]
-    );
-
-    return NextResponse.json({ message: "Item updated successfully" });
-  } catch (error) {
-    console.error("PUT Error:", error);
-    return NextResponse.json(
-      { error: "Failed to update item" },
-      { status: 500 }
-    );
-  }
-}
 
 // DELETE: Delete an item
 export async function DELETE(req) {

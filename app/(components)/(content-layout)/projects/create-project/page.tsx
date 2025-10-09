@@ -31,14 +31,12 @@ const CreateProject: React.FC<CreateProjectProps> = () => {
   ];
 
   const AsignSelect = [
-    { value: "Angelina May", label: "Angelina May" },
-    { value: "Kiara advain", label: "Kiara advain" },
-    { value: "Hercules Jhon", label: "Hercules Jhon" },
-    { value: "Mayor Kim", label: "Mayor Kim" },
-    { value: "Alexa Biss", label: "Alexa Biss" },
-    { value: "Karley Dia", label: "Karley Dia" },
-    { value: "Kim Jong", label: "Kim Jong" },
-    { value: "Darren Sami", label: "Darren Sami" },
+    { value: "wedding", label: "Wedding" },
+    { value: "engagement", label: "Engagement" },
+    { value: "reception", label: "Reception" },
+    { value: "mehndi", label: "Mehndi" },
+    { value: "haldi", label: "Haldi" },
+    { value: "sangeet", label: "Sangeet" },
   ];
   const DeliverSelect = [
     { value: "edited photos", label: "Edited Photos" },
@@ -122,12 +120,16 @@ const CreateProject: React.FC<CreateProjectProps> = () => {
   // Final submit handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const savedLoginData = localStorage.getItem("LoginData");
+    const loginData = savedLoginData ? JSON.parse(savedLoginData) : null;
+    const member_id = loginData?.id ?? null;
 
     const payload = {
       form1,
       form2: form2Rows,
       form3: form3Rows,
       form4,
+      member_id,
     };
 
     try {

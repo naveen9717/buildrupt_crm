@@ -17,18 +17,6 @@ export async function GET(request, { params }) {
       [deliverableId]
     );
 
-    // Query 3: Video crew by shoot_id
-    // const videoCrewResult = await db.query(
-    //   "SELECT * FROM crews_video WHERE shoot_id = ?",
-    //   [shootId]
-    // );
-
-    // Query 3: Video crew by shoot_id
-    // const additionalCrewResult = await db.query(
-    //   "SELECT * FROM crews_additional WHERE shoot_id = ?",
-    //   [shootId]
-    // );
-
     return NextResponse.json({
       deliverable: shootResult[0] || null,
       tasks: taskResult || [],
@@ -53,7 +41,7 @@ export async function PUT(request, { params }) {
   const { deliverableId, projectId } = await params;
   const body = await request.json();
 
-  const { form, form2 } = body;
+  const { form, form2, member_id } = body;
 
   try {
     // 1. Update shoot info
@@ -91,6 +79,15 @@ export async function PUT(request, { params }) {
         ]
       );
     }
+
+    // ✅ Insert notification (log activity)
+    const note = `Deliverable  was updated successfully with new details.`;
+    const currentDate = new Date();
+
+    await db.query(
+      "INSERT INTO notifications (member_id, project_id, date, notes) VALUES (?, ?, ?, ?)",
+      [member_id, projectId, currentDate, note]
+    );
 
     return NextResponse.json({ message: "Updated successfully" });
   } catch (error) {

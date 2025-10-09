@@ -31,7 +31,7 @@ export async function PUT(request, { params }) {
 
   const body = await request.json();
 
-  const { form } = body;
+  const { form, member_id } = body;
 
   try {
     // 1. Update shoot info

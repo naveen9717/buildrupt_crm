@@ -168,12 +168,15 @@ const EditShoot: React.FC<CreateProjectProps> = () => {
   // Final submit handler
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    const savedLoginData = localStorage.getItem("LoginData");
+    const loginData = savedLoginData ? JSON.parse(savedLoginData) : null;
+    const member_id = loginData?.id ?? null;
     const payload = {
       form1,
       form2: form2Rows,
       form3: form3Rows,
       form4: form4Rows,
+      member_id,
     };
 
     try {

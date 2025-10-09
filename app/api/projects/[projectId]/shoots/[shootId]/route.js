@@ -64,7 +64,7 @@ export async function PUT(request, { params }) {
   const { shootId, projectId } = await params;
   const body = await request.json();
 
-  const { form1, form2, form3, form4 } = body;
+  const { form1, form2, form3, form4, member_id } = body;
 
   try {
     // 1. Update shoot info
@@ -119,6 +119,15 @@ export async function PUT(request, { params }) {
       );
     }
 
+    // ✅ Update notification (instead of inserting)
+    // ✅ Insert notification (log activity)
+    const note = `Shoot  was updated successfully with new details.`;
+    const currentDate = new Date();
+
+    await db.query(
+      "INSERT INTO notifications (member_id, project_id, date, notes) VALUES (?, ?, ?, ?)",
+      [member_id, projectId, currentDate, note]
+    );
     return NextResponse.json({ message: "Updated successfully" });
   } catch (error) {
     console.error("Insert error:", error);

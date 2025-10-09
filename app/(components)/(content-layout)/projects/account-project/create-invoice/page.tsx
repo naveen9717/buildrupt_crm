@@ -54,8 +54,12 @@ const CreateInvoice: React.FC<CreateProjectProps> = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const savedLoginData = localStorage.getItem("LoginData");
+    const loginData = savedLoginData ? JSON.parse(savedLoginData) : null;
+    const member_id = loginData?.id ?? null;
     const payload = {
       form,
+      member_id,
     };
 
     try {

@@ -93301,7 +93301,7 @@ html[dir=rtl] .carousel-item-prev:not(.carousel-item-end) {
 }
 
 .card.custom-card .card-body {
-  padding: 1.25rem;
+  padding: 1rem;
   color: var(--default-text-color);
 }
 

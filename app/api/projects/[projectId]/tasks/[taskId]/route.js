@@ -40,6 +40,8 @@ export async function PUT(request, { params }) {
       [form.assigned, form.date, form.priority, form.status, form.notes, taskId]
     );
 
+    // ✅ Update notification (instead of inserting)
+
     return NextResponse.json({ message: "Updated successfully" });
   } catch (error) {
     console.error("Insert error:", error);
