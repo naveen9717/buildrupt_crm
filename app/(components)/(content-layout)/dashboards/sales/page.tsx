@@ -25,46 +25,46 @@ import Seo from "@/shared/layouts-components/seo/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { Card, Col, Dropdown, Form, Pagination, Row } from "react-bootstrap";
-
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 interface SalesProps {}
 
 const Sales: React.FC<SalesProps> = () => {
   const [data, setData] = useState({
-    photo: [],
-    expense: [],
-    paymentpaid: [],
-    projects: [],
+    photo: [] as any[],
+    expense: [] as any[],
+    paymentpaid: [] as any[],
+    projects: [] as any[],
   });
   const [loading, setLoading] = useState(true);
-  const [taskCounts, setTaskCounts] = useState([]);
-  const [shootCounts, setShootCounts] = useState([]);
-  const [deliverableCounts, setDeliverableCounts] = useState([]);
-  const [projectCounts, setProjectCounts] = useState([]);
+
+  const [taskCounts, setTaskCounts] = useState<number>(0);
+  const [shootCounts, setShootCounts] = useState<number>(0);
+  const [deliverableCounts, setDeliverableCounts] = useState<number>(0);
+  const [projectCounts, setProjectCounts] = useState<number>(0);
 
   function getStatusColor(dateString: string): string {
-    if (!dateString) return "secondary"; // default if no date
-
-    const month = new Date(dateString).getMonth() + 1; // JS months are 0–11
-
+    if (!dateString) return "secondary";
+    const month = new Date(dateString).getMonth() + 1;
     switch (month) {
       case 1:
       case 2:
-        return "remote"; // Jan-Feb → Blue
+        return "remote";
       case 3:
       case 4:
-        return "probation"; // Mar-Apr → Green
+        return "probation";
       case 5:
       case 6:
-        return "contract"; // May-Jun → Yellow
+        return "contract";
       case 7:
       case 8:
-        return "work-home"; // Jul-Aug → Red
+        return "work-home";
       case 9:
       case 10:
-        return "remote"; // Sep-Oct → Teal
+        return "remote";
       case 11:
       case 12:
-        return "probation"; // Nov-Dec → Purple (custom)
+        return "probation";
       default:
         return "secondary";
     }
@@ -89,38 +89,59 @@ const Sales: React.FC<SalesProps> = () => {
     }
   }
 
-  const fetchItems = async () => {
-    fetch(`${process.env.NEXT_PUBLIC_URL}/api/dashboard`)
-      .then((res) => res.json())
-      .then((result) => {
-        console.log("API Response:", result); // 🔍 check shape
-        setData(result);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching data:", err);
-        setLoading(false);
+  const capitalizeFirst = (str: any) => {
+    if (!str || typeof str !== "string" || str.trim() === "") return "";
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
+  // ---------- fetchers ----------
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/dashboard`, {
+        cache: "no-store",
       });
-    console.log("items", data);
+      const result = await res.json();
+      setData(
+        result || { photo: [], expense: [], paymentpaid: [], projects: [] }
+      );
+    } catch (err) {
+      console.error("Fetch failed:", err);
+      setData({ photo: [], expense: [], paymentpaid: [], projects: [] });
+    } finally {
+      setLoading(false);
+    }
   };
 
   async function fetchCounts() {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_URL}/api/projects/count`
+        `${process.env.NEXT_PUBLIC_URL}/api/projects/count`,
+        {
+          cache: "no-store",
+        }
       );
       if (!res.ok) throw new Error("Network response was not ok");
-      const data = await res.json();
-      console.log(data);
-      setTaskCounts(data.taskCount || 0);
-      setShootCounts(data.shootCount || 0);
-      setDeliverableCounts(data.deliverableCount || 0);
-      setProjectCounts(data.projectCount || 0);
+      const d = await res.json();
+      setTaskCounts(d.taskCount || 0);
+      setShootCounts(d.shootCount || 0);
+      setDeliverableCounts(d.deliverableCount || 0);
+      setProjectCounts(d.projectCount || 0);
     } catch (error) {
       console.error("Fetch error:", error);
-    } finally {
+      setTaskCounts(0);
+      setShootCounts(0);
+      setDeliverableCounts(0);
+      setProjectCounts(0);
     }
   }
+
+  useEffect(() => {
+    fetchData();
+    fetchCounts();
+  }, []);
+
+  // ---------- original taskData (kept) ----------
   const taskData = [
     {
       title: "Total Projects",
@@ -225,466 +246,569 @@ const Sales: React.FC<SalesProps> = () => {
     },
   ];
 
-  useEffect(() => {
-    fetchItems();
-    fetchCounts();
-  }, []);
+  // ---------- small skeleton components ----------
+  const KPIShimmer = () => (
+    <div className="p-3 border rounded-2 shadow-sm d-flex align-items-center gap-3">
+      <Skeleton circle width={40} height={40} />
+      <div className="flex-fill">
+        <Skeleton width={120} height={14} />
+        <Skeleton width={80} height={24} />
+      </div>
+    </div>
+  );
 
-  const capitalizeFirst = (str) => {
-    if (!str || typeof str !== "string" || str.trim() === "") return "";
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
+  const RowSkeleton = () => (
+    <div className="mb-3">
+      <Skeleton height={16} width="40%" />
+      <Skeleton height={12} width="80%" />
+    </div>
+  );
+
+  const TableRowSkeleton = ({ cols = 8 }: { cols?: number }) => (
+    <tr>
+      {Array.from({ length: cols }).map((_, i) => (
+        <td key={i}>
+          <Skeleton height={14} />
+        </td>
+      ))}
+    </tr>
+  );
 
   return (
-    <Fragment>
-      {/* <!-- Page Header --> */}
+    <SkeletonTheme
+      baseColor="#e9ecef"
+      highlightColor="#f8f9fa"
+      borderRadius={8}
+      duration={1.1}
+    >
+      <Fragment>
+        {/* <!-- Page Header --> */}
+        <Seo title="Dashboards-Analytics" />
 
-      <Seo title="Dashboards-Analytics" />
+        <Pageheader
+          title="Dashboards"
+          currentpage="Dashboards"
+          activepage="Dashboards"
+        />
+        {/* <!-- Page Header Close --> */}
 
-      <Pageheader
-        title="Dashboards"
-        currentpage="Dashboards"
-        activepage="Dashboards"
-      />
-
-      {/* <!-- Page Header Close --> */}
-
-      {/* <!-- Start:: row-1 --> */}
-
-      <Row>
-        <Col xxl={4} xl={6} className="">
-          <Row>
-            <Col xl={12}>
-              <Card className="custom-card overflow-hidden">
-                <Card.Body className="p-0">
-                  <div className="row g-0">
-                    {(taskData ?? []).map((vendor, index) => (
-                      <Col xl={6} key={index}>
-                        <Card className={`custom-card ${vendor.cardClass}`}>
-                          <Card.Body className={vendor.bodyClass}>
-                            <div className="mb-3">
-                              <span
-                                className={`avatar avatar-lg avatar-rounded bg-${vendor.svgColor}-transparent svg-${vendor.svgColor}`}
+        {/* <!-- Start:: row-1 --> */}
+        <Row>
+          <Col xxl={4} xl={6} className="">
+            <Row>
+              <Col xl={12}>
+                <Card className="custom-card overflow-hidden">
+                  <Card.Body className="p-0">
+                    <div className="row g-0">
+                      {loading
+                        ? Array.from({ length: 4 }).map((_, i) => (
+                            <Col xl={6} key={i} className="p-3">
+                              <KPIShimmer />
+                            </Col>
+                          ))
+                        : (taskData ?? []).map((vendor, index) => (
+                            <Col xl={6} key={index}>
+                              {/* ORIGINAL KPI CARD */}
+                              <Card
+                                className={`custom-card ${vendor.cardClass}`}
                               >
-                                {vendor.svgIcon}
-                              </span>
-                            </div>
-                            <div className="text-muted mb-2">
-                              {vendor.title}
-                            </div>
-                            <div className="d-flex align-items-end gap-2 flex-wrap">
-                              <h5 className="fw-semibold mb-0 lh-1">
-                                {vendor.value}
-                              </h5>
-                              <div>
-                                <SpkBadge
-                                  variant=""
-                                  Customclass={`badge bg-${vendor.iconColor}-transparent rounded-pill`}
+                                <Card.Body
+                                  className={(vendor as any).bodyClass}
                                 >
-                                  <i className={vendor.iconClass}></i>
-                                  {vendor.percent}
-                                </SpkBadge>
-                                <span className="text-muted fs-12">
-                                  {" "}
-                                  {vendor.year}
-                                </span>
-                              </div>
-                            </div>
-                          </Card.Body>
-                        </Card>
-                      </Col>
-                    ))}
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-        </Col>
-        <Col xxl={5} xl={6}>
-          <Card className="custom-card">
-            <Card.Body>
-              <h6 className="fw-semibold mb-3">Expenses Status</h6>
-              <div className="progress-stacked progress-xl mb-3">
-                <div
-                  className="progress-bar"
-                  role="progressbar"
-                  style={{ width: "25%" }}
-                  aria-valuenow={25}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  25%
-                </div>
-                <div
-                  className="progress-bar bg-success"
-                  role="progressbar"
-                  style={{ width: "35%" }}
-                  aria-valuenow={35}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  35%
-                </div>
-                <div
-                  className="progress-bar bg-warning"
-                  role="progressbar"
-                  style={{ width: "25%" }}
-                  aria-valuenow={25}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  25%
-                </div>
-                <div
-                  className="progress-bar bg-danger"
-                  role="progressbar"
-                  style={{ width: "15%" }}
-                  aria-valuenow={15}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  15%
-                </div>
-              </div>
-              <Row className="gy-2">
-                {(data?.expense ?? []).slice(0, 12).map((expenses, index) => (
-                  <Col xl={6} key={index}>
-                    <div className="d-flex align-items-center gap-4 flex-wrap">
+                                  <div className="mb-3">
+                                    <span
+                                      className={`avatar avatar-lg avatar-rounded bg-${vendor.svgColor}-transparent svg-${vendor.svgColor}`}
+                                    >
+                                      {vendor.svgIcon}
+                                    </span>
+                                  </div>
+                                  <div className="text-muted mb-2">
+                                    {vendor.title}
+                                  </div>
+                                  <div className="d-flex align-items-end gap-2 flex-wrap">
+                                    <h5 className="fw-semibold mb-0 lh-1">
+                                      {vendor.value}
+                                    </h5>
+                                    <div>
+                                      <SpkBadge
+                                        variant=""
+                                        Customclass={`badge bg-${vendor.iconColor}-transparent rounded-pill`}
+                                      >
+                                        <i className={vendor.iconClass}></i>
+                                        {vendor.percent}
+                                      </SpkBadge>
+                                      <span className="text-muted fs-12">
+                                        {" "}
+                                        {vendor.year}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </Card.Body>
+                              </Card>
+                            </Col>
+                          ))}
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+          </Col>
+
+          {/* Expenses Status */}
+          <Col xxl={5} xl={6}>
+            <Card className="custom-card">
+              <Card.Body>
+                <h6 className="fw-semibold mb-3">Expenses Status</h6>
+
+                {loading ? (
+                  <>
+                    <Skeleton height={22} className="mb-3" />
+                    <Row className="gy-2">
+                      {Array.from({ length: 6 }).map((_, i) => (
+                        <Col xl={6} key={i}>
+                          <RowSkeleton />
+                        </Col>
+                      ))}
+                    </Row>
+                  </>
+                ) : (
+                  <>
+                    <div className="progress-stacked progress-xl mb-3">
                       <div
-                        className={`employee-status-marker text-capitalize ${getStatusColor(
-                          expenses.date
-                        )}`}
+                        className="progress-bar"
+                        role="progressbar"
+                        style={{ width: "25%" }}
+                        aria-valuenow={25}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
                       >
-                        {expenses.event} :
+                        25%
                       </div>
-                      <div className="fw-semibold">{`₹ ${expenses.amount}`}</div>
-                    </div>
-                  </Col>
-                ))}
-              </Row>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col xxl={3}>
-          <Card className="custom-card overflow-hidden">
-            <Card.Header>
-              <div className="card-title">Recent Transactions</div>
-            </Card.Header>
-            <Card.Body>
-              <ul className="list-unstyled projects-recent-transactions-list">
-                {(data?.paymentpaid ?? []).slice(0, 4).map((tx, idx) => (
-                  <li key={idx}>
-                    <div className="d-flex align-items-center gap-2">
-                      <div className="lh-1">
-                        <span
-                          className={`avatar avatar-md avatar-rounded bg-${getVendorColor(
-                            tx.project_client?.charAt(0)
-                          )}-transparent`}
-                        >
-                          {tx.project_client?.charAt(0)}
-                        </span>
+                      <div
+                        className="progress-bar bg-success"
+                        role="progressbar"
+                        style={{ width: "35%" }}
+                        aria-valuenow={35}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                      >
+                        35%
                       </div>
-                      <div className="flex-fill">
-                        <span className="d-block fw-semibold">
-                          {tx.project_client}
-                        </span>
-                        <span className="fs-13 text-muted">
-                          {tx.due_date || tx.paid_date}
-                        </span>
+                      <div
+                        className="progress-bar bg-warning"
+                        role="progressbar"
+                        style={{ width: "25%" }}
+                        aria-valuenow={25}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                      >
+                        25%
                       </div>
-                      <div className="text-end">
-                        <span className="d-block fw-semibold">{`₹ ${tx.amount}`}</span>
-                        <span
-                          className={`fw-medium fs-13 text-capitalize ${
-                            tx.status === "paid"
-                              ? "text-success"
-                              : tx.status === "upcoming"
-                              ? "text-warning"
-                              : "text-danger"
-                          }`}
-                        >
-                          {tx.status}
-                        </span>
+                      <div
+                        className="progress-bar bg-danger"
+                        role="progressbar"
+                        style={{ width: "15%" }}
+                        aria-valuenow={15}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                      >
+                        15%
                       </div>
                     </div>
-                  </li>
-                ))}
-              </ul>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+                    <Row className="gy-2">
+                      {(data?.expense ?? [])
+                        .slice(0, 12)
+                        .map((expenses: any, index: number) => (
+                          <Col xl={6} key={index}>
+                            <div className="d-flex align-items-center gap-4 flex-wrap">
+                              <div
+                                className={`employee-status-marker text-capitalize ${getStatusColor(
+                                  expenses.date
+                                )}`}
+                              >
+                                {expenses.event} :
+                              </div>
+                              <div className="fw-semibold">{`₹ ${expenses.amount}`}</div>
+                            </div>
+                          </Col>
+                        ))}
+                    </Row>
+                  </>
+                )}
+              </Card.Body>
+            </Card>
+          </Col>
 
-      {/* <!-- End:: row-1 --> */}
-
-      {/* <!-- Start:: row-2 --> */}
-
-      <Row>
-        <Col xxl={6}>
-          <Card className="custom-card">
-            <Card.Header className="justify-content-between">
-              <div className="card-title">Vendors's List</div>
-              <Link scroll={false} href="#!" className="text-muted fs-13">
-                View All<i className="ti ti-arrow-narrow-right ms-1"></i>
-              </Link>
-            </Card.Header>
-            <Card.Body>
-              <ul className="list-unstyled hrm-employee-list">
-                {(data?.photo ?? []).slice(0, 5).map((vendor, index) => (
-                  <li key={index}>
-                    <div className="d-flex align-items-center gap-2 flex-wrap">
-                      <div className="lh-1">
-                        <span
-                          className={`avatar avatar-md avatar-rounded bg-${getVendorColor(
-                            vendor.name?.charAt(0)
-                          )}-transparent`}
-                        >
-                          {vendor.name?.charAt(0)}
-                        </span>
-                      </div>
-                      <div className="flex-fill">
-                        <span className="d-block fw-semibold">
-                          {vendor.name}
-                          <SpkBadge
-                            variant=""
-                            Customclass={`bg-${vendor.status}-transparent ms-2`}
-                          >
-                            {`₹ ${vendor.half}`}
-                          </SpkBadge>
-                        </span>
-                        <span className="text-muted fs-13">
-                          {vendor.half_label}
-                        </span>
-                      </div>
-                      <div className="text-end">
-                        <span className="fw-medium">{`₹ ${vendor.full}`}</span>
-                        <span className="d-block fs-12 mt-1 text-muted">
-                          <span
-                            className={`fw-medium fs-13 text-capitalize ${
-                              vendor.status === "active"
-                                ? "text-success"
-                                : vendor.status === "unactive"
-                                ? "text-warning"
-                                : "text-danger"
-                            }`}
-                          >
-                            {vendor.status}
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col xxl={6}>
-          <Card className="custom-card overflow-hidden">
-            <Card.Header className="justify-content-between">
-              <div className="card-title">Payments's List</div>
-              <SpkDropdown
-                toggleas="a"
-                Navigate="#!"
-                Customtoggleclass="fs-12 text-muted no-caret"
-                Toggletext="Sort By"
-                Arrowicon={true}
-              >
-                <Dropdown.Item href="#!">This Week</Dropdown.Item>
-                <Dropdown.Item href="#!">This Month</Dropdown.Item>
-                <Dropdown.Item href="#!">This Year</Dropdown.Item>
-              </SpkDropdown>
-            </Card.Header>
-            <Card.Body className="p-0">
-              <div className="table-responsive custom-sales-table">
-                <SpkTables
-                  tableClass="text-nowrap table-hover"
-                  header={[
-                    { title: "Name" },
-                    { title: "Date" },
-                    { title: "Status" },
-                  ]}
-                >
-                  {(data?.paymentpaid ?? [])
-                    .slice(0, 4)
-                    .map((payment, index) => (
-                      <tr key={index}>
-                        <td>
+          {/* Recent Transactions */}
+          <Col xxl={3}>
+            <Card className="custom-card overflow-hidden">
+              <Card.Header>
+                <div className="card-title">Recent Transactions</div>
+              </Card.Header>
+              <Card.Body>
+                {loading ? (
+                  <ul className="list-unstyled">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <li key={i} className="mb-3">
+                        <div className="d-flex align-items-center gap-2">
+                          <Skeleton width={40} height={40} circle />
+                          <div className="flex-fill">
+                            <Skeleton width={160} height={14} />
+                            <Skeleton width={120} height={12} />
+                          </div>
+                          <div className="text-end">
+                            <Skeleton width={70} height={14} />
+                            <Skeleton width={60} height={12} />
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <ul className="list-unstyled projects-recent-transactions-list">
+                    {(data?.paymentpaid ?? [])
+                      .slice(0, 4)
+                      .map((tx: any, idx: number) => (
+                        <li key={idx}>
                           <div className="d-flex align-items-center gap-2">
                             <div className="lh-1">
                               <span
                                 className={`avatar avatar-md avatar-rounded bg-${getVendorColor(
-                                  payment.project_name?.charAt(0)
+                                  tx.project_client?.charAt(0)
                                 )}-transparent`}
                               >
-                                {payment.project_name?.charAt(0)}
+                                {tx.project_client?.charAt(0)}
                               </span>
                             </div>
-                            <div>
-                              <p className="fw-medium mb-0">
-                                {payment.project_name}
-                              </p>
-                              <span className="text-muted fs-12">
-                                {payment.payment_mode}
+                            <div className="flex-fill">
+                              <span className="d-block fw-semibold">
+                                {tx.project_client}
+                              </span>
+                              <span className="fs-13 text-muted">
+                                {tx.due_date || tx.paid_date}
+                              </span>
+                            </div>
+                            <div className="text-end">
+                              <span className="d-block fw-semibold">{`₹ ${tx.amount}`}</span>
+                              <span
+                                className={`fw-medium fs-13 text-capitalize ${
+                                  tx.status === "paid"
+                                    ? "text-success"
+                                    : tx.status === "upcoming"
+                                    ? "text-warning"
+                                    : "text-danger"
+                                }`}
+                              >
+                                {tx.status}
                               </span>
                             </div>
                           </div>
-                        </td>
-                        <td>{payment.due_date || payment.paid_date}</td>
-                        <td>
-                          <span
-                            className={`fw-medium fs-13 text-capitalize ${
-                              payment.status === "paid"
-                                ? "text-success"
-                                : payment.status === "upcoming"
-                                ? "text-warning"
-                                : "text-danger"
-                            }`}
-                          >
-                            {payment.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                </SpkTables>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+                        </li>
+                      ))}
+                  </ul>
+                )}
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        {/* <!-- End:: row-1 --> */}
 
-      {/* <!-- End:: row-2 --> */}
+        {/* <!-- Start:: row-2 --> */}
+        <Row>
+          {/* Vendors's List */}
+          <Col xxl={6}>
+            <Card className="custom-card">
+              <Card.Header className="justify-content-between">
+                <div className="card-title">Vendors's List</div>
+                <Link scroll={false} href="#!" className="text-muted fs-13">
+                  View All<i className="ti ti-arrow-narrow-right ms-1"></i>
+                </Link>
+              </Card.Header>
+              <Card.Body>
+                <ul className="list-unstyled hrm-employee-list">
+                  {loading
+                    ? Array.from({ length: 5 }).map((_, i) => (
+                        <li key={i} className="mb-3">
+                          <div className="d-flex align-items-center gap-2 flex-wrap">
+                            <Skeleton width={40} height={40} circle />
+                            <div className="flex-fill">
+                              <Skeleton width={160} height={14} />
+                              <Skeleton width={120} height={12} />
+                            </div>
+                            <div className="text-end">
+                              <Skeleton width={60} height={14} />
+                              <Skeleton width={80} height={12} />
+                            </div>
+                          </div>
+                        </li>
+                      ))
+                    : (data?.photo ?? [])
+                        .slice(0, 5)
+                        .map((vendor: any, index: number) => (
+                          <li key={index}>
+                            <div className="d-flex align-items-center gap-2 flex-wrap">
+                              <div className="lh-1">
+                                <span
+                                  className={`avatar avatar-md avatar-rounded bg-${getVendorColor(
+                                    vendor.name?.charAt(0)
+                                  )}-transparent`}
+                                >
+                                  {vendor.name?.charAt(0)}
+                                </span>
+                              </div>
+                              <div className="flex-fill">
+                                <span className="d-block fw-semibold">
+                                  {vendor.name}
+                                  <SpkBadge
+                                    variant=""
+                                    Customclass={`bg-${vendor.status}-transparent ms-2`}
+                                  >
+                                    {`₹ ${vendor.half}`}
+                                  </SpkBadge>
+                                </span>
+                                <span className="text-muted fs-13">
+                                  {vendor.half_label}
+                                </span>
+                              </div>
+                              <div className="text-end">
+                                <span className="fw-medium">{`₹ ${vendor.full}`}</span>
+                                <span className="d-block fs-12 mt-1 text-muted">
+                                  <span
+                                    className={`fw-medium fs-13 text-capitalize ${
+                                      vendor.status === "active"
+                                        ? "text-success"
+                                        : vendor.status === "unactive"
+                                        ? "text-warning"
+                                        : "text-danger"
+                                    }`}
+                                  >
+                                    {vendor.status}
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          </li>
+                        ))}
+                </ul>
+              </Card.Body>
+            </Card>
+          </Col>
 
-      {/* <!-- Start:: row-3 --> */}
-
-      <Row>
-        <Col xl={12}>
-          <Card className="custom-card">
-            <Card.Header className="justify-content-between">
-              <div className="card-title">Projects Details</div>
-              <div className="d-flex flex-wrap gap-2">
-                <div>
-                  <Form.Control
-                    className="form-control-sm"
-                    type="text"
-                    placeholder="Search Here"
-                    aria-label=".form-control-sm example"
-                  />
-                </div>
+          {/* Payments's List */}
+          <Col xxl={6}>
+            <Card className="custom-card overflow-hidden">
+              <Card.Header className="justify-content-between">
+                <div className="card-title">Payments's List</div>
                 <SpkDropdown
-                  Id="dropdownMenuButton1"
                   toggleas="a"
-                  Togglevariant=""
-                  Menulabel="dropdownMenuButton1"
+                  Navigate="#!"
+                  Customtoggleclass="fs-12 text-muted no-caret"
                   Toggletext="Sort By"
-                  Customtoggleclass=" btn-primary btn-sm btn-wave waves-effect waves-light no-caret btn"
                   Arrowicon={true}
                 >
-                  <Dropdown.Item as="li" href="#!">
-                    New
-                  </Dropdown.Item>
-                  <Dropdown.Item as="li" href="#!">
-                    Popular
-                  </Dropdown.Item>
-                  <Dropdown.Item as="li" href="#!">
-                    Relevant
-                  </Dropdown.Item>
+                  <Dropdown.Item href="#!">This Week</Dropdown.Item>
+                  <Dropdown.Item href="#!">This Month</Dropdown.Item>
+                  <Dropdown.Item href="#!">This Year</Dropdown.Item>
                 </SpkDropdown>
-              </div>
-            </Card.Header>
-            <Card.Body className="p-0">
-              <div className="table-responsive">
-                <SpkTables
-                  tableClass="text-nowrap"
-                  header={[
-                    { title: "Project ID" },
-                    { title: "Applicant Name" },
-                    { title: "Client" },
-                    { title: "Relation" },
-                    { title: "Email" },
-                    { title: "Mobile" },
-                    { title: "Cost" },
-                    { title: "Action" },
-                  ]}
-                >
-                  {(data?.projects ?? []).slice(0, 5).map((project, index) => (
-                    <tr key={index}>
-                      <td>{`#SPT-00-${index}`}</td>
-                      <td>
-                        <div className="d-flex align-items-center">
-                          <div className="lh-1">
-                            <span
-                              className={`avatar avatar-md avatar-rounded bg-${getVendorColor(
-                                project.name?.charAt(0)
-                              )}-transparent`}
-                            >
-                              {project.name?.charAt(0)}
-                            </span>
-                          </div>
-                          &nbsp;{project.name}
-                        </div>
-                      </td>
-                      <td>{project.client}</td>
-                      <td>{project.relation}</td>
-                      <td>{project.email}</td>
-                      <td>{project.phone}</td>
-                      <td>
-                        <SpkBadge
-                          variant=""
-                          Customclass={`bg-${
-                            project.cost > 100000
-                              ? "primary"
-                              : project.cost >= 200000
-                              ? "success"
-                              : project.cost > 500000
-                              ? "info"
-                              : project.cost < 100000
-                              ? "secondary"
-                              : "danger"
-                          }-transparent`}
-                        >
-                          {`₹ ${project.cost}`}
-                        </SpkBadge>
-                      </td>
-                      <td>
-                        <div className="hstack gap-2 fs-15">
-                          <Link
-                            scroll={false}
-                            aria-label="anchor"
-                            href="#!"
-                            className="btn btn-icon waves-effect waves-light btn-sm btn-success-light rounded-circle"
-                          >
-                            <i className="ri-phone-line"></i>
-                          </Link>
-                          <Link
-                            scroll={false}
-                            aria-label="anchor"
-                            href="#!"
-                            className="btn btn-icon waves-effect waves-light btn-sm btn-primary-light rounded-circle"
-                          >
-                            <i className="ri-edit-line"></i>
-                          </Link>
-                          <Link
-                            scroll={false}
-                            aria-label="anchor"
-                            href="#!"
-                            className="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle"
-                          >
-                            <i className="ri-delete-bin-line"></i>
-                          </Link>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </SpkTables>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+              </Card.Header>
+              <Card.Body className="p-0">
+                <div className="table-responsive custom-sales-table">
+                  <SpkTables
+                    tableClass="text-nowrap table-hover"
+                    header={[
+                      { title: "Name" },
+                      { title: "Date" },
+                      { title: "Status" },
+                    ]}
+                  >
+                    {loading
+                      ? Array.from({ length: 4 }).map((_, i) => (
+                          <TableRowSkeleton key={i} cols={3} />
+                        ))
+                      : (data?.paymentpaid ?? [])
+                          .slice(0, 4)
+                          .map((payment: any, index: number) => (
+                            <tr key={index}>
+                              <td>
+                                <div className="d-flex align-items-center gap-2">
+                                  <div className="lh-1">
+                                    <span
+                                      className={`avatar avatar-md avatar-rounded bg-${getVendorColor(
+                                        payment.project_name?.charAt(0)
+                                      )}-transparent`}
+                                    >
+                                      {payment.project_name?.charAt(0)}
+                                    </span>
+                                  </div>
+                                  <div>
+                                    <p className="fw-medium mb-0">
+                                      {payment.project_name}
+                                    </p>
+                                    <span className="text-muted fs-12">
+                                      {payment.payment_mode}
+                                    </span>
+                                  </div>
+                                </div>
+                              </td>
+                              <td>{payment.due_date || payment.paid_date}</td>
+                              <td>
+                                <span
+                                  className={`fw-medium fs-13 text-capitalize ${
+                                    payment.status === "paid"
+                                      ? "text-success"
+                                      : payment.status === "upcoming"
+                                      ? "text-warning"
+                                      : "text-danger"
+                                  }`}
+                                >
+                                  {payment.status}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                  </SpkTables>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        {/* <!-- End:: row-2 --> */}
 
-      {/* <!-- End:: row-3 --> */}
-    </Fragment>
+        {/* <!-- Start:: row-3 --> */}
+        <Row>
+          <Col xl={12}>
+            <Card className="custom-card">
+              <Card.Header className="justify-content-between">
+                <div className="card-title">Projects Details</div>
+                <div className="d-flex flex-wrap gap-2">
+                  <div>
+                    <Form.Control
+                      className="form-control-sm"
+                      type="text"
+                      placeholder="Search Here"
+                      aria-label=".form-control-sm example"
+                    />
+                  </div>
+                  <SpkDropdown
+                    Id="dropdownMenuButton1"
+                    toggleas="a"
+                    Togglevariant=""
+                    Menulabel="dropdownMenuButton1"
+                    Toggletext="Sort By"
+                    Customtoggleclass=" btn-primary btn-sm btn-wave waves-effect waves-light no-caret btn"
+                    Arrowicon={true}
+                  >
+                    <Dropdown.Item as="li" href="#!">
+                      New
+                    </Dropdown.Item>
+                    <Dropdown.Item as="li" href="#!">
+                      Popular
+                    </Dropdown.Item>
+                    <Dropdown.Item as="li" href="#!">
+                      Relevant
+                    </Dropdown.Item>
+                  </SpkDropdown>
+                </div>
+              </Card.Header>
+              <Card.Body className="p-0">
+                <div className="table-responsive">
+                  <SpkTables
+                    tableClass="text-nowrap"
+                    header={[
+                      { title: "Project ID" },
+                      { title: "Project Name" },
+                      { title: "Client" },
+                      { title: "Relation" },
+                      { title: "Email" },
+                      { title: "Mobile" },
+                      { title: "Cost" },
+                      { title: "Action" },
+                    ]}
+                  >
+                    {loading
+                      ? Array.from({ length: 5 }).map((_, i) => (
+                          <TableRowSkeleton key={i} cols={8} />
+                        ))
+                      : (data?.projects ?? [])
+                          .slice(0, 5)
+                          .map((project: any, index: number) => (
+                            <tr key={index}>
+                              <td>{`#SPT-00-${index}`}</td>
+                              <td>
+                                <div className="d-flex align-items-center">
+                                  <div className="lh-1">
+                                    <span
+                                      className={`avatar avatar-md avatar-rounded bg-${getVendorColor(
+                                        project.name?.charAt(0)
+                                      )}-transparent`}
+                                    >
+                                      {project.name?.charAt(0)}
+                                    </span>
+                                  </div>
+                                  &nbsp;{project.name}
+                                </div>
+                              </td>
+                              <td>{project.client}</td>
+                              <td>{project.relation}</td>
+                              <td>{project.email}</td>
+                              <td>{project.phone}</td>
+                              <td>
+                                <SpkBadge
+                                  variant=""
+                                  Customclass={`bg-${
+                                    project.cost > 500000
+                                      ? "info"
+                                      : project.cost >= 200000
+                                      ? "success"
+                                      : project.cost > 100000
+                                      ? "primary"
+                                      : project.cost < 100000
+                                      ? "secondary"
+                                      : "danger"
+                                  }-transparent`}
+                                >
+                                  {`₹ ${project.cost}`}
+                                </SpkBadge>
+                              </td>
+                              <td>
+                                <div className="hstack gap-2 fs-15">
+                                  <Link
+                                    scroll={false}
+                                    aria-label="anchor"
+                                    href="#!"
+                                    className="btn btn-icon waves-effect waves-light btn-sm btn-success-light rounded-circle"
+                                  >
+                                    <i className="ri-phone-line"></i>
+                                  </Link>
+                                  <Link
+                                    scroll={false}
+                                    aria-label="anchor"
+                                    href="#!"
+                                    className="btn btn-icon waves-effect waves-light btn-sm btn-primary-light rounded-circle"
+                                  >
+                                    <i className="ri-edit-line"></i>
+                                  </Link>
+                                  <Link
+                                    scroll={false}
+                                    aria-label="anchor"
+                                    href="#!"
+                                    className="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle"
+                                  >
+                                    <i className="ri-delete-bin-line"></i>
+                                  </Link>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                  </SpkTables>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        {/* <!-- End:: row-3 --> */}
+      </Fragment>
+    </SkeletonTheme>
   );
 };
 

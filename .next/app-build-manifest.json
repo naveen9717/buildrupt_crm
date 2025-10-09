@@ -16,9 +16,31 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(components)/(content-layout)/layout.js"
     ],
+    "/(components)/(content-layout)/projects/projects-list/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/(components)/(content-layout)/projects/projects-list/page.css",
+      "static/chunks/app/(components)/(content-layout)/projects/projects-list/page.js"
+    ],
+    "/api/login/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/login/route.js"
+    ],
+    "/api/projects/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/projects/route.js"
+    ],
+    "/api/projects/count/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/projects/count/route.js"
+    ],
     "/(components)/(content-layout)/dashboards/sales/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
+      "static/css/app/(components)/(content-layout)/dashboards/sales/page.css",
       "static/chunks/app/(components)/(content-layout)/dashboards/sales/page.js"
     ],
     "/api/dashboard/route": [
@@ -26,41 +48,91 @@
       "static/chunks/main-app.js",
       "static/chunks/app/api/dashboard/route.js"
     ],
-    "/api/projects/count/route": [
+    "/(components)/(content-layout)/calendars/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/projects/count/route.js"
+      "static/css/app/(components)/(content-layout)/calendars/page.css",
+      "static/chunks/app/(components)/(content-layout)/calendars/page.js"
     ],
-    "/(components)/(content-layout)/projects/create-project/page": [
+    "/api/calendars/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/(components)/(content-layout)/projects/create-project/page.css",
-      "static/chunks/app/(components)/(content-layout)/projects/create-project/page.js"
+      "static/chunks/app/api/calendars/route.js"
     ],
-    "/api/projects/route": [
+    "/(components)/(content-layout)/crews/creates/photo-list/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/projects/route.js"
+      "static/css/app/(components)/(content-layout)/crews/creates/photo-list/page.css",
+      "static/chunks/app/(components)/(content-layout)/crews/creates/photo-list/page.js"
     ],
-    "/(components)/(content-layout)/projects/projects-list/page": [
+    "/api/crews/photo/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(components)/(content-layout)/projects/projects-list/page.js"
+      "static/chunks/app/api/crews/photo/route.js"
     ],
-    "/(components)/(content-layout)/projects/project/[projectId]/page": [
+    "/api/crews/count/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(components)/(content-layout)/projects/project/[projectId]/page.js"
+      "static/chunks/app/api/crews/count/route.js"
     ],
-    "/api/projects/project/[projectId]/route": [
+    "/(components)/(content-layout)/crews/creates/additional-list/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/projects/project/[projectId]/route.js"
+      "static/css/app/(components)/(content-layout)/crews/creates/additional-list/page.css",
+      "static/chunks/app/(components)/(content-layout)/crews/creates/additional-list/page.js"
     ],
-    "/api/login/route": [
+    "/api/crews/additional/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/login/route.js"
+      "static/chunks/app/api/crews/additional/route.js"
+    ],
+    "/(components)/(content-layout)/team-members/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/(components)/(content-layout)/team-members/page.css",
+      "static/chunks/app/(components)/(content-layout)/team-members/page.js"
+    ],
+    "/api/login/team-member/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/login/team-member/route.js"
+    ],
+    "/(components)/(content-layout)/finance/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(components)/(content-layout)/finance/page.js"
+    ],
+    "/api/finance/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/finance/route.js"
+    ],
+    "/(components)/(content-layout)/notification/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/(components)/(content-layout)/notification/page.css",
+      "static/chunks/app/(components)/(content-layout)/notification/page.js"
+    ],
+    "/api/notification/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/notification/route.js"
+    ],
+    "/(components)/(content-layout)/projects/account-project/payment/[paymentId]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/(components)/(content-layout)/projects/account-project/payment/[paymentId]/page.css",
+      "static/chunks/app/(components)/(content-layout)/projects/account-project/payment/[paymentId]/page.js"
+    ],
+    "/api/projects/project/[projectId]/payment/[paymentId]/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/projects/project/[projectId]/payment/[paymentId]/route.js"
+    ],
+    "/api/projects/account-project/payment/[paymentId]/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/projects/account-project/payment/[paymentId]/route.js"
     ],
     "/(components)/(content-layout)/projects/shoots/shoots-list/page": [
       "static/chunks/webpack.js",
@@ -72,52 +144,35 @@
       "static/chunks/main-app.js",
       "static/chunks/app/api/projects/shoots/route.js"
     ],
-    "/(components)/(content-layout)/projects/[projectId]/shoots/[shootId]/page": [
+    "/(components)/(content-layout)/projects/deliverables/deliverables-list/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(components)/(content-layout)/projects/[projectId]/shoots/[shootId]/page.js"
-    ],
-    "/api/crews/photo/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/crews/photo/route.js"
-    ],
-    "/api/projects/shoots/expenses/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/projects/shoots/expenses/route.js"
-    ],
-    "/api/projects/[projectId]/shoots/[shootId]/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/projects/[projectId]/shoots/[shootId]/route.js"
-    ],
-    "/(components)/(content-layout)/projects/shoots/create-shoot/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/(components)/(content-layout)/projects/shoots/create-shoot/page.css",
-      "static/chunks/app/(components)/(content-layout)/projects/shoots/create-shoot/page.js"
-    ],
-    "/(components)/(content-layout)/projects/deliverables/create-deliverable/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/(components)/(content-layout)/projects/deliverables/create-deliverable/page.css",
-      "static/chunks/app/(components)/(content-layout)/projects/deliverables/create-deliverable/page.js"
+      "static/chunks/app/(components)/(content-layout)/projects/deliverables/deliverables-list/page.js"
     ],
     "/api/projects/deliverables/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/api/projects/deliverables/route.js"
     ],
-    "/(components)/(content-layout)/notification/page": [
+    "/(components)/(content-layout)/projects/tasks/tasks-list/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(components)/(content-layout)/notification/page.js"
+      "static/chunks/app/(components)/(content-layout)/projects/tasks/tasks-list/page.js"
     ],
-    "/api/notification/[memberId]/route": [
+    "/api/projects/tasks/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/notification/[memberId]/route.js"
+      "static/chunks/app/api/projects/tasks/route.js"
+    ],
+    "/(components)/(content-layout)/projects/project/[projectId]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(components)/(content-layout)/projects/project/[projectId]/page.js"
+    ],
+    "/api/projects/project/[projectId]/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/projects/project/[projectId]/route.js"
     ],
     "/_not-found/page": [
       "static/chunks/webpack.js",

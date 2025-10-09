@@ -2,15 +2,16 @@
 
 import { NextResponse, NextRequest } from "next/server";
 
-export async function GET(request, { params }) {
-  // safely get memberId from params
-  const { memberId } = params ?? {};
-
-  if (!memberId) {
-    return NextResponse.json({ error: "Missing memberId" }, { status: 400 });
-  }
-
+export async function GET(request) {
   try {
+    // ✅ Extract memberId from query params
+    const { searchParams } = new URL(request.url);
+    const memberId = searchParams.get("memberId");
+
+    if (!memberId) {
+      return NextResponse.json({ error: "Missing memberId" }, { status: 400 });
+    }
+
     const [rows] = await db.query(
       `
       SELECT 

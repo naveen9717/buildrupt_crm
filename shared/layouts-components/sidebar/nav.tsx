@@ -385,15 +385,6 @@ export const MENUITEMS: any = [
   {
     menutitle: "GENERAL",
   },
-  {
-    path: "/notification",
-    icon: Svgicons.Timelineicon,
-    title: "Notifications",
-    type: "link",
-    active: false,
-    dirchange: false,
-    selected: false,
-  },
 
   {
     path: "/calendars",
@@ -471,6 +462,15 @@ export const MENUITEMS: any = [
     path: "/team-members/",
     icon: Svgicons.Hrmicon,
     title: "Team Members",
+    type: "link",
+    active: false,
+    dirchange: false,
+    selected: false,
+  },
+  {
+    path: "/notification",
+    icon: Svgicons.Timelineicon,
+    title: "Notifications",
     type: "link",
     active: false,
     dirchange: false,

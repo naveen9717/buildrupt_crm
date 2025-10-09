@@ -1,10 +1,14 @@
 {
-  "/api/notification/[memberId]/route": "app/api/notification/[memberId]/route.js",
-  "/api/login/route": "app/api/login/route.js",
   "/_not-found/page": "app/_not-found/page.js",
-  "/(components)/(content-layout)/projects/shoots/create-shoot/page": "app/(components)/(content-layout)/projects/shoots/create-shoot/page.js",
-  "/(components)/(content-layout)/projects/create-project/page": "app/(components)/(content-layout)/projects/create-project/page.js",
-  "/(components)/(content-layout)/projects/deliverables/create-deliverable/page": "app/(components)/(content-layout)/projects/deliverables/create-deliverable/page.js",
+  "/api/finance/route": "app/api/finance/route.js",
+  "/api/login/team-member/route": "app/api/login/team-member/route.js",
+  "/api/notification/route": "app/api/notification/route.js",
+  "/api/calendars/route": "app/api/calendars/route.js",
+  "/(components)/(content-layout)/projects/shoots/shoots-list/page": "app/(components)/(content-layout)/projects/shoots/shoots-list/page.js",
+  "/(components)/(content-layout)/projects/projects-list/page": "app/(components)/(content-layout)/projects/projects-list/page.js",
+  "/(components)/(content-layout)/team-members/page": "app/(components)/(content-layout)/team-members/page.js",
+  "/(components)/(content-layout)/projects/project/[projectId]/page": "app/(components)/(content-layout)/projects/project/[projectId]/page.js",
+  "/(components)/(content-layout)/finance/page": "app/(components)/(content-layout)/finance/page.js",
   "/(components)/(content-layout)/notification/page": "app/(components)/(content-layout)/notification/page.js",
-  "/(components)/(content-layout)/projects/project/[projectId]/page": "app/(components)/(content-layout)/projects/project/[projectId]/page.js"
+  "/(components)/(content-layout)/calendars/page": "app/(components)/(content-layout)/calendars/page.js"
 }

@@ -98481,6 +98481,7 @@ caption {
 .table thead tr th {
   font-weight: 500;
   font-size: 0.85rem;
+  text-transform: uppercase;
 }
 
 .table.table-sm > :not(caption) > * > * {
